@@ -1,3 +1,3 @@
-# To Make a Dadaist Poem
+# A N+7 text processor
 
-A simple text reassembler based on Tristan Tzara's "To Make a Dadaist Poem"
+A simple N+7 text processor from a list of known nouns.

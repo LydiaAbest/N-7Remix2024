@@ -5,56 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>To Make a Dadaist Poem</title>
+    <title>N+7</title>
 
-    <meta
-      name="description"
-      content="An example of Tristan Tzara's To Make a Dadaist Poem."
-    />
+    <meta name="description" content="A simple exercise template." />
     <!-- styles -->
-    <style>
-      #poem {
-        padding: 10px;
-        border: 3px solid #000;
-      }
-      .controls {
-        padding: 10px;
-      }
-    </style>
+    <style></style>
   </head>
   <body>
-    <h1>To Make a Dadaist Poem</h1>
-    <ol>
-      <li>Take a newspaper.</li>
-      <li>Take a pair of scissors.</li>
-      <li>Choose an article as long as you are planning to make your poem.</li>
-      <li>Cut out the article.</li>
-      <li>
-        Then cut out each of the words that make up this article and put them in
-        a bag.
-      </li>
-      <li>Shake it gently.</li>
-      <li>
-        Then take out the scraps one after the other in the order in which they
-        left the bag.
-      </li>
-      <li>Copy conscientiously.</li>
-      <li>The poem will be like you.</li>
-      <li>
-        And here are you a writer, infinitely original and endowed with a
-        sensibility that is charming though beyond the understanding of the
-        vulgar.
-      </li>
-    </ol>
-    <cite>Tristan Tzara</cite>
-
-    <div class="controls">
-      <button id="new-poem">New poem</button>
-    </div>
-    <div id="poem"></div>
+    <h1>N+7</h1>
+    <h2>Source text</h2>
+    <p id="sourceText"></p>
+    <h2>New text</h2>
+    <p id="newText"></p>
     <!-- script -->
     <script>
-      const article = `when i was little i memorised all the creaks in the floor into mum and dad’s bedroom, so that i wouldn’t wake them if i snuck in.
+      let nouns;
+      const sourceText = `when i was little i memorised all the creaks in the floor into mum and dad’s bedroom,
+so that i wouldn’t wake them if i snuck in.
 when he died the house was remodelled and now a new bed sits against a different wall, covering the creaks.
 but now i jump up and down. i stomp hard. i bash and kick and thud and stumble, but no one ever hears me.
 ever since my dad died, i’ve been alone.
@@ -62,50 +29,37 @@ the silence in their bedroom sticks to me like the night on skin.
 itching, and irreversible.
 i worry about not being found.
 `;
-      const button = document.getElementById("new-poem");
-      function shuffleWords(list) {
-        return list
-          .map((value) => ({ value, sort: Math.random() }))
-          .sort((a, b) => a.sort - b.sort)
-          .map(({ value }) => value);
-      }
-      function clearText() {
-        const poem = document.getElementById("poem");
-        poem.innerHTML = "";
-      }
-      function addLine(line) {
-        const poem = document.getElementById("poem");
-        const poemLine = document.createElement("div");
-        const lineText = document.createTextNode(line);
-        poemLine.appendChild(lineText);
-        poem.appendChild(poemLine);
-      }
-      function assemblePoem(articleWords) {
-        let lineText = "";
-        for (const [counter, word] of articleWords.entries()) {
-          if ((counter + 1) % 5 == 0) {
-            addLine(lineText);
-            lineText = "";
-          } else {
-            if (lineText === "") {
-              lineText = word;
-            } else {
-              lineText = lineText + " " + word;
+      const wordOffset = 7;
+      function generateNewText(text) {
+        let splitText = text.split(" ");
+        let newText = "";
+        for (const word of splitText) {
+          let indexInList = nouns.indexOf(word);
+          let newWord;
+          if (indexInList > -1) {
+            if (nouns[indexInList + wordOffset]) {
+              newWord = nouns[indexInList + wordOffset];
             }
+          } else {
+            newWord = word;
+          }
+          if (newText === "") {
+            newText = newWord;
+          } else {
+            newText = newText + " " + newWord;
           }
         }
-        if (lineText !== "") {
-          addLine(lineText);
-        }
+        return newText;
       }
-      function newPoem() {
-        const cutUpArticle = article.split(" ");
-        const shuffledWords = shuffleWords(cutUpArticle);
-        clearText();
-        assemblePoem(shuffledWords);
+      function initPoem(nounList) {
+        nouns = nounList.split(/\r?\n/);
+        newText = generateNewText(sourceText);
+        document.getElementById("sourceText").innerHTML = sourceText;
+        document.getElementById("newText").innerHTML = newText;
       }
-      newPoem();
-      button.addEventListener("click", newPoem);
+      fetch("nounlist.txt")
+        .then((response) => response.text())
+        .then((textContent) => initPoem(textContent));
     </script>
     <!-- include the Glitch button to show what the webpage is about and
           to make it easier for folks to view source and remix -->
