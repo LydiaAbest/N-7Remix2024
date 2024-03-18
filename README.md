@@ -1,2 +1,3 @@
-# N-7Remix2024
-N+7
+# To Make a Dadaist Poem
+
+A simple text reassembler based on Tristan Tzara's "To Make a Dadaist Poem"
